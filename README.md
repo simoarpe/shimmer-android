@@ -3,6 +3,7 @@
 Shimmer for Android
 </h1>
 
+Updated version of [Shimmer](http://facebook.github.io/shimmer-android) library that supports Android SDK version 32, and newer Android Gradle plugin.
 
 [Shimmer](http://facebook.github.io/shimmer-android) is an Android library that
 provides an easy way to add a shimmer effect to any view in your Android app.
