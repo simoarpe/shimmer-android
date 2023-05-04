@@ -8,19 +8,24 @@
 
 plugins {
   id 'com.android.application'
-  id 'kotlin-android'
-  id 'kotlin-android-extensions'
+  id 'org.jetbrains.kotlin.android'
 }
 
 android {
-  compileSdkVersion versions.compileSdk
+  compileSdk 32
+
+  buildFeatures {
+    viewBinding = true
+  }
 
   defaultConfig {
     applicationId 'com.facebook.shimmer.sample'
-    minSdkVersion versions.minSdk
-    targetSdkVersion versions.targetSdk
+    minSdkVersion 21
+    targetSdkVersion 32
     versionCode 1
     versionName '1.0'
+
+    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
   }
 
   compileOptions {
@@ -34,7 +39,7 @@ android {
 }
 
 dependencies {
-  implementation deps.shimmer
-  implementation deps.kotlinStdlib
-  implementation deps.constraintLayout
+  implementation project(':shimmer')
+  implementation 'androidx.core:core-ktx:1.7.0'
+  implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 }

@@ -9,15 +9,13 @@
 apply plugin: 'com.android.library'
 
 android {
-  compileSdkVersion versions.compileSdk
+  compileSdkVersion 32
 
   defaultConfig {
-    minSdkVersion versions.minSdk
+    minSdkVersion 21
   }
 }
 
 dependencies {
-  implementation deps.androidXAnnotations
+  implementation 'androidx.annotation:annotation:1.6.0'
 }
-
-apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
