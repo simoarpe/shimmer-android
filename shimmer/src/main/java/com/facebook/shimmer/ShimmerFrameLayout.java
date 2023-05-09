@@ -8,13 +8,11 @@
 
 package com.facebook.shimmer;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -50,7 +48,6 @@ public class ShimmerFrameLayout extends FrameLayout {
     init(context, attrs);
   }
 
-  @TargetApi(Build.VERSION_CODES.LOLLIPOP)
   public ShimmerFrameLayout(
       Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
@@ -66,16 +63,16 @@ public class ShimmerFrameLayout extends FrameLayout {
       return;
     }
 
-    TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ShimmerFrameLayout, 0, 0);
+    TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.ShimmerFrameLayout, 0, 0);
     try {
       Shimmer.Builder shimmerBuilder =
-          a.hasValue(R.styleable.ShimmerFrameLayout_shimmer_colored)
-                  && a.getBoolean(R.styleable.ShimmerFrameLayout_shimmer_colored, false)
+          typedArray.hasValue(R.styleable.ShimmerFrameLayout_shimmer_colored)
+                  && typedArray.getBoolean(R.styleable.ShimmerFrameLayout_shimmer_colored, false)
               ? new Shimmer.ColorHighlightBuilder()
               : new Shimmer.AlphaHighlightBuilder();
-      setShimmer(shimmerBuilder.consumeAttributes(a).build());
+      setShimmer(shimmerBuilder.consumeAttributes(typedArray).build());
     } finally {
-      a.recycle();
+      typedArray.recycle();
     }
   }
 
