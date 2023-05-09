@@ -65,7 +65,7 @@ public class ShimmerFrameLayout extends FrameLayout {
 
     TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.ShimmerFrameLayout, 0, 0);
     try {
-      Shimmer.Builder shimmerBuilder =
+      Shimmer.Builder<?> shimmerBuilder =
           typedArray.hasValue(R.styleable.ShimmerFrameLayout_shimmer_colored)
                   && typedArray.getBoolean(R.styleable.ShimmerFrameLayout_shimmer_colored, false)
               ? new Shimmer.ColorHighlightBuilder()

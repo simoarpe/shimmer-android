@@ -22,17 +22,15 @@ import android.graphics.Rect;
 import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
 import android.view.animation.LinearInterpolator;
+
+import java.util.Locale;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 public final class ShimmerDrawable extends Drawable {
   private final ValueAnimator.AnimatorUpdateListener mUpdateListener =
-      new ValueAnimator.AnimatorUpdateListener() {
-        @Override
-        public void onAnimationUpdate(ValueAnimator animation) {
-          invalidateSelf();
-        }
-      };
+      animation -> invalidateSelf();
 
   private final Paint mShimmerPaint = new Paint();
   private final Rect mDrawRect = new Rect();
@@ -110,11 +108,12 @@ public final class ShimmerDrawable extends Drawable {
 
   @Override
   public void draw(@NonNull Canvas canvas) {
-    if (mShimmer == null || mShimmerPaint.getShader() == null) {
+    final Shimmer shimmer = mShimmer;
+    if (shimmer == null || mShimmerPaint.getShader() == null) {
       return;
     }
 
-    final float tiltTan = (float) Math.tan(Math.toRadians(mShimmer.tilt));
+    final float tiltTan = (float) Math.tan(Math.toRadians(shimmer.tilt));
     final float translateHeight = mDrawRect.height() + tiltTan * mDrawRect.width();
     final float translateWidth = mDrawRect.width() + tiltTan * mDrawRect.height();
     final float dx;
@@ -127,8 +126,7 @@ public final class ShimmerDrawable extends Drawable {
       animatedValue = mStaticAnimationProgress;
     }
 
-    switch (mShimmer.direction) {
-      default:
+    switch (shimmer.direction) {
       case Shimmer.Direction.LEFT_TO_RIGHT:
         dx = offset(-translateWidth, translateWidth, animatedValue);
         dy = 0;
@@ -145,10 +143,13 @@ public final class ShimmerDrawable extends Drawable {
         dx = 0f;
         dy = offset(translateHeight, -translateHeight, animatedValue);
         break;
+      default:
+        throw new IllegalStateException(String.format(Locale.ENGLISH,
+            "Unhandled shimmer direction for %d.", shimmer.direction));
     }
 
     mShaderMatrix.reset();
-    mShaderMatrix.setRotate(mShimmer.tilt, mDrawRect.width() / 2f, mDrawRect.height() / 2f);
+    mShaderMatrix.setRotate(shimmer.tilt, mDrawRect.width() / 2f, mDrawRect.height() / 2f);
     mShaderMatrix.preTranslate(dx, dy);
     mShimmerPaint.getShader().setLocalMatrix(mShaderMatrix);
     canvas.drawRect(mDrawRect, mShimmerPaint);
@@ -224,7 +225,6 @@ public final class ShimmerDrawable extends Drawable {
 
     final Shader shader;
     switch (mShimmer.shape) {
-      default:
       case Shimmer.Shape.LINEAR:
         boolean vertical =
             mShimmer.direction == Shimmer.Direction.TOP_TO_BOTTOM
@@ -245,6 +245,9 @@ public final class ShimmerDrawable extends Drawable {
                 mShimmer.positions,
                 Shader.TileMode.CLAMP);
         break;
+      default:
+        throw new IllegalStateException(String.format(Locale.ENGLISH,
+            "Unhandled shimmer shape for %d.", mShimmer.shape));
     }
 
     mShimmerPaint.setShader(shader);
